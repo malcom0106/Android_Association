@@ -85,13 +85,17 @@ public class MainActivity extends AppCompatActivity {
 
                     //Creer un adherent pour verifier les variables transmis par le WS
                     Adherent adherent = gson.fromJson(s, Adherent.class);
+                    if(adherent == null){
+                        finish();
+                    }else{
+                        //Associer l'adherent à une session
+                        Session.setAdherent(adherent);
+                        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                        //Redirect vers HomeActivity
+                        Intent intent = new Intent(context,HomeActivity.class);
+                        startActivity(intent);
+                    }
 
-                    //Associer l'adherent à une session
-                    Session.setAdherent(adherent);
-                    Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-                    //Redirect vers HomeActivity
-                    Intent intent = new Intent(context,HomeActivity.class);
-                    //startActivity(intent);
                 }
                 catch(Exception ex){
                     Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();

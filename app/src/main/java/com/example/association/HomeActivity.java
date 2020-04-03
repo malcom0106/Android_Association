@@ -2,6 +2,8 @@ package com.example.association;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import android.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,16 +11,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.association.Entities.Adherent;
 import com.example.association.Entities.Association;
 import com.example.association.Entities.Associations;
+import com.example.association.Fragment.MainFragment;
+import com.example.association.Utilities.Functions;
 import com.example.association.Utilities.Session;
 
 public class HomeActivity extends AppCompatActivity {
+    FragmentManager fragmentManager;
     Context context;
     Adherent adherent;
     @Override
@@ -26,28 +34,39 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         context = this;
-
+        fragmentManager = getFragmentManager();
 
         adherent = Session.getAdherent();
         if(adherent == null){
             this.finish();
-        }
-        try{
-            //On recupere notre recyclerView
-            RecyclerView recyclerView = findViewById(R.id.rcvMonRecycler);
+        }else{
+            try{
+                //On va chercher notre toolbar dans layout
+                Toolbar toolbar = findViewById(R.id.tlb_main);
+                //On remplace l'actionBar par notre toolbar
+                setSupportActionBar(toolbar);
+                //Supprimer le titre par default
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+                //Definission de titre
+                toolbar.setTitle("Titre");
+                //Evenement Click sur la toolbar
+                toolbar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "toolbar", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-            //On recupere les association
-            Associations associations = new Associations();
+                //Instenciation mon premier fragment
+                MainFragment mainFragment = new MainFragment();
+                Functions.replaceFragment(fragmentManager,mainFragment,"mainFragment");
 
-            AssociationAdapter associationAdapter = new AssociationAdapter(associations);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            }
+            catch (Exception ex){
+                String message = ex.getMessage();
+            }
+        }
 
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(associationAdapter);
-        }
-        catch (Exception ex){
-            String message = ex.getMessage();
-        }
     }
 
     public class AssociationHolder extends RecyclerView.ViewHolder{
@@ -102,5 +121,24 @@ public class HomeActivity extends AppCompatActivity {
         public int getItemCount() {
             return mesAssociations.size();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //On associe un menu à notre activité
+        getMenuInflater().inflate(R.menu.menu_home,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.item_Quitter:
+                finish();
+                break;
+        }
+        return true;
     }
 }
