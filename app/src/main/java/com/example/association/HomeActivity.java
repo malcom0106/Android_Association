@@ -12,31 +12,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.association.Entities.Adherent;
 import com.example.association.Entities.Association;
 import com.example.association.Entities.Associations;
+import com.example.association.Utilities.Session;
 
 public class HomeActivity extends AppCompatActivity {
     Context context;
+    Adherent adherent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         context = this;
+        adherent = Session.getAdherent();
+        if(adherent == null){
+            this.finish();
+        }
+        try{
+            //On recupere notre recyclerView
+            RecyclerView recyclerView = findViewById(R.id.rcvMonRecycler);
 
-        //On recupere notre recyclerView
-        RecyclerView recyclerView = findViewById(R.id.rcvMonRecycler);
+            //On recupere les association
+            Associations associations = new Associations();
 
-        //On recupere les association
-        Associations associations = new Associations();
+            AssociationAdapter associationAdapter = new AssociationAdapter(associations);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
-        AssociationAdapter associationAdapter = new AssociationAdapter(associations);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(associationAdapter);
-
-
-
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(associationAdapter);
+        }
+        catch (Exception ex){
+            String message = ex.getMessage();
+        }
     }
 
     public class AssociationHolder extends RecyclerView.ViewHolder{

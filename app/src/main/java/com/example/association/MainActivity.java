@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.association.Entities.Adherent;
 import com.example.association.Entities.Adherents;
+import com.example.association.Utilities.Session;
 import com.google.gson.Gson;
 
 import okhttp3.HttpUrl;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     Adherent adherent = gson.fromJson(s, Adherent.class);
 
                     //Associer l'adherent à une session
-
+                    Session.setAdherent(adherent);
 
                     //Redirect vers HomeActivity
                     Intent intent = new Intent(context,HomeActivity.class);
