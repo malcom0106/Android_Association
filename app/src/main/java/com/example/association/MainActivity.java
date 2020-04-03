@@ -75,11 +75,13 @@ public class MainActivity extends AppCompatActivity {
                     Gson gson = new Gson();
 
                     //Creer un adherent pour verifier les variables transmis par le WS
-                    Adherents adherents = gson.fromJson(s, Adherents.class);
+                    Adherent adherent = gson.fromJson(s, Adherent.class);
+
+                    //Associer l'adherent à une session
 
 
+                    //Redirect vers HomeActivity
                     Intent intent = new Intent(context,HomeActivity.class);
-                    intent.putExtra("adherent",s);
                     startActivity(intent);
                 }
                 catch(Exception ex){
@@ -92,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String CallServiceWeb(String login, String password)
     {
-
         String retourSW = "";
         String url = "http://claudehenry.fr/serviceweb/LoginAdherent";
         //String url = "http://claudehenry.fr/serviceweb/bonjour";
@@ -119,5 +120,4 @@ public class MainActivity extends AppCompatActivity {
         Log.e("retourWS",retourSW);
         return retourSW;
     }
-
 }
