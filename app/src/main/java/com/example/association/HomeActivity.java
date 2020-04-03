@@ -37,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         fragmentManager = getFragmentManager();
 
         adherent = Session.getAdherent();
+        Toast.makeText(context, adherent.getNom(), Toast.LENGTH_SHORT).show();
         if(adherent == null){
             this.finish();
         }else{
@@ -48,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
                 //Supprimer le titre par default
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
                 //Definission de titre
-                toolbar.setTitle("Titre");
+                toolbar.setTitle("Bjr "+adherent.getNom());
                 //Evenement Click sur la toolbar
                 toolbar.setOnClickListener(new View.OnClickListener() {
                     @Override

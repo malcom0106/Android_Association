@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.association.Entities.Adherent;
 import com.example.association.R;
 import com.example.association.Utilities.Session;
 
@@ -16,12 +17,12 @@ import com.example.association.Utilities.Session;
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
-    private TextView textView;
-    public MainFragment() {
+    public TextView textView;
+    private Adherent _Adherent;
 
+    public MainFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

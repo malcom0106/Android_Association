@@ -22,6 +22,8 @@ import com.example.association.Utilities.Constantes;
 import com.example.association.Utilities.Session;
 import com.google.gson.Gson;
 
+import java.io.IOException;
+
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -83,25 +85,35 @@ public class MainActivity extends AppCompatActivity {
                 try{
                     Gson gson = new Gson();
 
-                    //Creer un adherent pour verifier les variables transmis par le WS
-                    Adherent adherent = gson.fromJson(s, Adherent.class);
-                    if(adherent == null){
-                        finish();
-                    }else{
-                        //Associer l'adherent à une session
-                        Session.setAdherent(adherent);
-                        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-                        //Redirect vers HomeActivity
-                        Intent intent = new Intent(context,HomeActivity.class);
-                        startActivity(intent);
+                    try{
+
+                        //Creer un adherent pour verifier les variables transmis par le WS
+                        adherent = gson.fromJson(s, Adherent.class);
+
+                        // print staff object
+                        //System.out.println(adherent);
+                        if(adherent == null){
+                            finish();
+                        }else{
+                            //Associer l'adherent à une session
+                            Session.setAdherent(adherent);
+                            String idsession = Session.getId();
+                            //Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+                            //Redirect vers HomeActivity
+                            Intent intent = new Intent(context,HomeActivity.class);
+                            startActivity(intent);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
 
                 }
                 catch(Exception ex){
                     Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-            Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
         }
     }
 }
