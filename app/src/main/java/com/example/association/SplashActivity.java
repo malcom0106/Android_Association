@@ -27,7 +27,7 @@ public class SplashActivity extends AppCompatActivity {
 
             //Simule un appel service web
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
