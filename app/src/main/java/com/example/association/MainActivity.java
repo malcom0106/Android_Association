@@ -1,5 +1,6 @@
 package com.example.association;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -14,8 +15,14 @@ import android.widget.Toast;
 
 import com.example.association.Entities.Adherent;
 import com.example.association.Entities.Adherents;
+import com.example.association.Entities.ParametreOkHttp;
+import com.example.association.Entities.ParametresOkHttp;
+import com.example.association.Utilities.CallServiceWeb;
+import com.example.association.Utilities.Constantes;
 import com.example.association.Utilities.Session;
 import com.google.gson.Gson;
+
+import java.io.IOException;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -25,6 +32,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     EditText txtLogin;
     EditText txtPassword;
+    Adherent adherent;
     Context context;
 
     @Override
@@ -32,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-
+        Intent intent = getIntent();
+        Session.setId(intent.getStringExtra("idsession"));
         txtLogin = findViewById(R.id.txtLogin);
         txtPassword = findViewById(R.id.txtPassword);
         Button btnLogin = findViewById(R.id.btnLogin);
@@ -41,23 +50,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //On recupere les valeurs dans les textEdit
-                String login = txtLogin.getText().toString().trim();
-                String password = txtPassword.getText().toString().trim();
+                ParametresOkHttp parametresOkHttp = new ParametresOkHttp();
+                parametresOkHttp.add(new ParametreOkHttp("login" , txtLogin.getText().toString().trim()));
+                parametresOkHttp.add(new ParametreOkHttp("password" , txtPassword.getText().toString().trim()));
 
                 //On fait une tache asynchrone
-                AsyncCallWS asyncCallWS = new AsyncCallWS(login,password);
+                AsyncCallWS asyncCallWS = new AsyncCallWS(Constantes.URL_GETLOGIN,parametresOkHttp);
                 asyncCallWS.execute();
             }
         });
     }
 
     private class AsyncCallWS extends AsyncTask<String, Integer,String> {
-        private String login;
-        private String password;
+        private String url;
+        private ParametresOkHttp parametresOkHttp;
 
-        public AsyncCallWS(String login, String password) {
-            this.login = login;
-            this.password = password;
+        public AsyncCallWS(String url,@Nullable ParametresOkHttp parametresOkHttp) {
+            this.url = url;
+            this.parametresOkHttp = parametresOkHttp;
         }
 
         @Override
@@ -66,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected String doInBackground(String... strings) {
-            return CallServiceWeb(this.login, this.password);
+            return CallServiceWeb.CallServiceWeb(this.url, this.parametresOkHttp);
         }
         @Override
         protected void onPostExecute(String s) {
@@ -75,50 +85,35 @@ public class MainActivity extends AppCompatActivity {
                 try{
                     Gson gson = new Gson();
 
-                    //Creer un adherent pour verifier les variables transmis par le WS
-                    Adherent adherent = gson.fromJson(s, Adherent.class);
+                    try{
 
-                    //Associer l'adherent à une session
-                    Session.setAdherent(adherent);
+                        //Creer un adherent pour verifier les variables transmis par le WS
+                        adherent = gson.fromJson(s, Adherent.class);
 
-                    //Redirect vers HomeActivity
-                    Intent intent = new Intent(context,HomeActivity.class);
-                    startActivity(intent);
+                        // print staff object
+                        //System.out.println(adherent);
+                        if(adherent == null){
+                            finish();
+                        }else{
+                            //Associer l'adherent à une session
+                            Session.setAdherent(adherent);
+                            String idsession = Session.getId();
+                            //Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+                            //Redirect vers HomeActivity
+                            Intent intent = new Intent(context,HomeActivity.class);
+                            startActivity(intent);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
                 catch(Exception ex){
                     Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-            Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private String CallServiceWeb(String login, String password)
-    {
-        String retourSW = "";
-        String url = "http://claudehenry.fr/serviceweb/LoginAdherent";
-        //String url = "http://claudehenry.fr/serviceweb/bonjour";
-
-        OkHttpClient client = new OkHttpClient();
-
-        //Request request = new Request.Builder().url(url).get().build();
-
-        HttpUrl.Builder httpBuider = HttpUrl.parse(url).newBuilder();
-        httpBuider.addQueryParameter("login", login);
-        httpBuider.addQueryParameter("password", password);
-
-        Request request = new Request.Builder().url(httpBuider.build()).build();
-        try{
-            Response response = client.newCall(request).execute();
-            if(response.isSuccessful()){
-                retourSW =  response.body().string();
-            }
-        }
-        catch (Exception ex){
-
-            retourSW= ex.getMessage();
-        }
-        Log.e("retourWS",retourSW);
-        return retourSW;
     }
 }
