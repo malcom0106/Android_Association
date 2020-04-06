@@ -32,9 +32,13 @@ import java.util.ArrayList;
 public class HomeActivity extends AppCompatActivity {
 
     FragmentManager fragmentManager;
+    HomeFragment homeFragment;
+    SortiesFragment sortiesFragment;
     ArrayList<Fragment> fragments;
     Context context;
     Adherent adherent;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +46,31 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         context = this;
 
-        initFragments();
+
 
         adherent = Session.getAdherent();
-        Toast.makeText(context, adherent.getNom(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, adherent.getNom(), Toast.LENGTH_SHORT).show();
         if(adherent == null){
             this.finish();
         }else{
             try{
                 initToolbar();
+                initFragments();
 
                 //Instenciation mon premier fragment
-                Functions.replaceFragment(fragmentManager, fragments.get(0),"homeFragment");
+                Functions.replaceFragment(fragmentManager, homeFragment,"homeFragment");
 
             }
             catch (Exception ex){
                 String message = ex.getMessage();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        homeFragment.SetAdherent(adherent);
     }
 
     public class AssociationHolder extends RecyclerView.ViewHolder{
@@ -143,9 +154,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void initFragments(){
-
-        HomeFragment homeFragment = new HomeFragment();
-        SortiesFragment sortiesFragment = new SortiesFragment();
 
         fragments = new ArrayList<>();
 

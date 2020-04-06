@@ -17,30 +17,35 @@
             android:id="@+id/txtNom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="nom" />
 
         <TextView
             android:id="@+id/txtPrenom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="prenom" />
 
         <TextView
             android:id="@+id/txtTelephone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="0102030405" />
 
         <TextView
             android:id="@+id/txtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="azeazeazeaz@frerert.fr" />
 
         <TextView
             android:id="@+id/txtSoldeCompte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="51.23 €" />
 
         <Switch
@@ -48,18 +53,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
+            android:padding="10dp"
             android:text="Etat Compte" />
 
         <Button
             android:id="@+id/btnModifierCompte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#00BCD4"
+            android:layout_marginBottom="10dp"
             android:text="Modifier" />
 
         <Button
             android:id="@+id/btnCrediterCompte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#FFC107"
             android:text="Créditer Compte" />
 
     </LinearLayout>
