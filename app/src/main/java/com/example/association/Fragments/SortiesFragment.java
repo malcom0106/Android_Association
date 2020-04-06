@@ -7,7 +7,14 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.association.Entities.Sortie;
+import com.example.association.Entities.Sorties;
 import com.example.association.R;
 
 /**
@@ -60,6 +67,73 @@ public class SortiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sorties, container, false);
+        View view = inflater.inflate(R.layout.fragment_sorties, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.rcvMonRecycler);
+
+
+        return view;
     }
+
+
+    public class SortieHolder extends RecyclerView.ViewHolder{
+        //On declare les widgets
+        public final TextView txtNom;
+        public final TextView txtDate;
+        public final TextView txtPrix;
+        public final ImageView imgPhoto;
+
+        //Constructeur du AdherentHolder
+        public SortieHolder(@NonNull View itemView) {
+            super(itemView);
+
+            //On instencie les widgets qui se trouve dans la View "ItemView"
+            txtNom = itemView.findViewById(R.id.txtNom);
+            txtDate = itemView.findViewById(R.id.txtDate);
+            txtPrix = itemView.findViewById(R.id.txtPrix);
+            imgPhoto = itemView.findViewById(R.id.imgPhoto);
+        }
+
+        //On crée un class qui permet de charger notre Adherent dans chaque Item
+        public void setSortie (Sortie sortie) {
+            txtNom.setText(sortie.getNom());
+            txtDate.setText(sortie.getDate());
+            txtPrix.setText(""+sortie.getPrix());
+
+        }
+    }
+
+    public class SortieAdapter extends RecyclerView.Adapter<SortieHolder>{
+        //On declare notre liste en globale
+        Sorties _sorties;
+
+        //On instancie dans la liste via un constructeur
+        public SortieAdapter(Sorties sorties) {
+            this._sorties = sorties;
+        }
+
+        @NonNull
+        @Override
+        public SortieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            //On convertit une layoutItem en View pour la passer dans un holder
+            View view = LayoutInflater.from(context).inflate(R.layout.item_sortie,parent,false);
+            //On retourne un nouveau Holder avec notre View view creer a partir d'un layout Item
+            return new SortieHolder(view);
+        }
+
+
+        @Override
+        public void onBindViewHolder(@NonNull SortieHolder holder, int position) {
+            //Rechercher un item à la position "position"
+            Sortie sortie = this._sorties.get(position);
+            //On passe l'objet à notre holder
+            holder.setSortie(sortie);
+        }
+
+        @Override
+        public int getItemCount() {
+            return _sorties.size();
+        }
+    }
+
 }

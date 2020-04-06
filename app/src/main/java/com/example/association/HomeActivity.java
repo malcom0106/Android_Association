@@ -1,6 +1,7 @@
 package com.example.association;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -10,6 +11,8 @@ import android.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,10 +25,17 @@ import android.widget.Toast;
 import com.example.association.Entities.Adherent;
 import com.example.association.Entities.Association;
 import com.example.association.Entities.Associations;
+import com.example.association.Entities.ParametreOkHttp;
+import com.example.association.Entities.ParametresOkHttp;
+import com.example.association.Entities.Sortie;
+import com.example.association.Entities.Sorties;
 import com.example.association.Fragments.HomeFragment;
 import com.example.association.Fragments.SortiesFragment;
+import com.example.association.Utilities.CallServiceWeb;
+import com.example.association.Utilities.Constantes;
 import com.example.association.Utilities.Functions;
 import com.example.association.Utilities.Session;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -35,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     HomeFragment homeFragment;
     SortiesFragment sortiesFragment;
     ArrayList<Fragment> fragments;
+    Sorties sorties;
     Context context;
     Adherent adherent;
 
@@ -57,9 +68,13 @@ public class HomeActivity extends AppCompatActivity {
                 initToolbar();
                 initFragments();
 
+                ParametresOkHttp parametresOkHttp = new ParametresOkHttp();
+                parametresOkHttp.add(new ParametreOkHttp("idassociation" , ""+adherent.getIdAssociation()));
+                AsyncCallWS asyncCallWS = new AsyncCallWS(Constantes.URL_GETSORTIES,parametresOkHttp);
+                asyncCallWS.execute();
+
                 //Instenciation mon premier fragment
                 Functions.replaceFragment(fragmentManager, homeFragment,"homeFragment");
-
             }
             catch (Exception ex){
                 String message = ex.getMessage();
@@ -148,7 +163,6 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.item_compte:
                 Functions.replaceFragment(fragmentManager, fragments.get(0),"sortieFragment");
                 break;
-
         }
         return true;
     }
@@ -156,7 +170,8 @@ public class HomeActivity extends AppCompatActivity {
     public void initFragments(){
 
         fragments = new ArrayList<>();
-
+        homeFragment = new HomeFragment();
+        sortiesFragment = new SortiesFragment();
         fragments.add(homeFragment);
         fragments.add(sortiesFragment);
 
@@ -179,5 +194,40 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(context, "toolbar", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private class AsyncCallWS extends AsyncTask<String, Integer,String> {
+
+        private String url;
+        private ParametresOkHttp parametresOkHttp;
+
+        public AsyncCallWS(String url,@Nullable ParametresOkHttp parametresOkHttp) {
+            this.url = url;
+            this.parametresOkHttp = parametresOkHttp;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String... strings) {
+            return CallServiceWeb.CallServiceWeb(this.url, this.parametresOkHttp);
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if(!s.isEmpty()){
+                try{
+                    Gson gson = new Gson();
+                    sorties = gson.fromJson(s, Sorties.class);
+
+                }
+                catch(Exception ex){
+                    Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        }
     }
 }

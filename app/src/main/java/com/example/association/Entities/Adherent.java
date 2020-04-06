@@ -12,17 +12,17 @@ public class Adherent {
     @Nullable
     private String telephone;
     @Nullable
-    private String solde;
+    private double solde;
     @Nullable
-    private String statut;
+    private boolean statut;
     @Nullable
-    private String idAssociation;
+    private int idAssociation;
 
 
     public Adherent() {
     }
 
-    public Adherent(String nom, String prenom, String matricule, String email, String telephone, String solde, String statut, String idassociation) {
+    public Adherent(String nom, String prenom, String matricule, String email, String telephone, double solde, boolean statut, int idassociation) {
         this.nom = nom;
         this.prenom = prenom;
         this.matricule = matricule;
@@ -76,33 +76,27 @@ public class Adherent {
         this.telephone = telephone;
     }
 
-    @Nullable
-    public String getSolde() {
+    public double getSolde() {
         return solde;
     }
 
-    public void setSolde(@Nullable String solde) {
+    public void setSolde(double solde) {
         this.solde = solde;
     }
 
-    @Nullable
-    public String getStatut() {
+    public boolean isStatut() {
         return statut;
     }
 
-    public void setStatut(@Nullable String statut) {
+    public void setStatut(boolean statut) {
         this.statut = statut;
     }
 
-    @Nullable
-    public String getIdAssociation() {
+    public int getIdAssociation() {
         return idAssociation;
     }
 
-    public void setIdAssociation(@Nullable String idAssociation) {
+    public void setIdAssociation(int idAssociation) {
         this.idAssociation = idAssociation;
     }
-
-
-
 }
