@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class AsyncCallWS extends AsyncTask<String, Integer,String> {
+
         private String url;
         private ParametresOkHttp parametresOkHttp;
 

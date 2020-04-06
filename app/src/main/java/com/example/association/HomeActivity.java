@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
                 //Supprimer le titre par default
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
                 //Definission de titre
-                toolbar.setTitle("Bjr "+adherent.getNom());
+                toolbar.setTitle("Bjr "+ adherent.getNom());
                 //Evenement Click sur la toolbar
                 toolbar.setOnClickListener(new View.OnClickListener() {
                     @Override
