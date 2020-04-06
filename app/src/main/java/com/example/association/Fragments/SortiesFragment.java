@@ -1,5 +1,6 @@
 package com.example.association.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import android.app.Fragment;
@@ -11,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.association.Entities.Sortie;
 import com.example.association.Entities.Sorties;
+
 import com.example.association.R;
 
 /**
@@ -27,6 +30,9 @@ public class SortiesFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    Context _context;
+    RecyclerView rcwSorties;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,71 +75,73 @@ public class SortiesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sorties, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.rcvMonRecycler);
-
+        rcwSorties = view.findViewById(R.id.rcvRecycler);
 
         return view;
     }
 
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<SortieHolder> {
 
-    public class SortieHolder extends RecyclerView.ViewHolder{
-        //On declare les widgets
-        public final TextView txtNom;
-        public final TextView txtDate;
-        public final TextView txtPrix;
-        public final ImageView imgPhoto;
+        Sorties sorties;
 
-        //Constructeur du AdherentHolder
-        public SortieHolder(@NonNull View itemView) {
-            super(itemView);
-
-            //On instencie les widgets qui se trouve dans la View "ItemView"
-            txtNom = itemView.findViewById(R.id.txtNom);
-            txtDate = itemView.findViewById(R.id.txtDate);
-            txtPrix = itemView.findViewById(R.id.txtPrix);
-            imgPhoto = itemView.findViewById(R.id.imgPhoto);
+        public RecyclerViewAdapter(Sorties sorties) {
+            this.sorties = sorties;
         }
-
-        //On crée un class qui permet de charger notre Adherent dans chaque Item
-        public void setSortie (Sortie sortie) {
-            txtNom.setText(sortie.getNom());
-            txtDate.setText(sortie.getDate());
-            txtPrix.setText(""+sortie.getPrix());
-
-        }
-    }
-
-    public class SortieAdapter extends RecyclerView.Adapter<SortieHolder>{
-        //On declare notre liste en globale
-        Sorties _sorties;
-
-        //On instancie dans la liste via un constructeur
-        public SortieAdapter(Sorties sorties) {
-            this._sorties = sorties;
-        }
-
         @NonNull
         @Override
         public SortieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            //On convertit une layoutItem en View pour la passer dans un holder
-            View view = LayoutInflater.from(context).inflate(R.layout.item_sortie,parent,false);
-            //On retourne un nouveau Holder avec notre View view creer a partir d'un layout Item
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sortie, parent, false);
             return new SortieHolder(view);
         }
-
-
         @Override
-        public void onBindViewHolder(@NonNull SortieHolder holder, int position) {
-            //Rechercher un item à la position "position"
-            Sortie sortie = this._sorties.get(position);
-            //On passe l'objet à notre holder
-            holder.setSortie(sortie);
+        public void onBindViewHolder(@NonNull SortieHolder sortieHolder, int position) {
+            Sortie sortie = this.sorties.get(position);
+            sortieHolder.setSortie(sortie);
         }
-
         @Override
         public int getItemCount() {
-            return _sorties.size();
+            return sorties.size();
         }
     }
 
+    public class SortieHolder extends RecyclerView.ViewHolder {
+
+        public final TextView txtNom;
+        public final TextView txtPrix;
+        public final TextView txtDate;
+        public final ImageView imgPhoto;
+
+        public SortieHolder(@NonNull View itemView) {
+            super(itemView);
+
+            txtNom = itemView.findViewById(R.id.txtNom);
+            txtPrix = itemView.findViewById(R.id.txtPrix);
+            txtDate = itemView.findViewById(R.id.txtDate);
+            imgPhoto = itemView.findViewById(R.id.imgPhoto);
+        }
+
+        public void setSortie(Sortie sortie) {
+            txtNom.setText(sortie.getNom());
+            txtPrix.setText("" + sortie.getPrix() + " €");
+            txtDate.setText("");
+            //imgPhoto.setImageDrawable();
+        }
+    }
+
+    public void loadSorties(Sorties sorties, Context context) {
+        _context = context;
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(sorties);
+
+        // la manière dont les adherents doivent s'afficher
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
+
+        // version GridView
+        //RecyclerView.LayoutManager layoutManager2 = new GridLayoutManager(context, 3);
+
+        // Effet sur le RecyclerView
+        //rcvAdherents.setItemAnimator(new DefaultItemAnimator());
+
+        rcwSorties.setLayoutManager(layoutManager);
+        rcwSorties.setAdapter(recyclerViewAdapter);
+    }
 }

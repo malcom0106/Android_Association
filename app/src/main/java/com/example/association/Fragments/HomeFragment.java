@@ -31,7 +31,6 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,10 +46,18 @@ public class HomeFragment extends Fragment {
     }
 
     public void SetAdherent(Adherent adherent){
-        txtNom.setText("Votre Nom : "+ adherent.getNom());
-        txtPrenom.setText("Votre Prenom : "+ adherent.getPrenom());
-        txtEmail.setText("Votre Telephone : "+ adherent.getTelephone());
-        txtTelephone.setText("Votre Email : "+ adherent.getEmail());
-        txtSolde.setText(adherent.getSolde()+" €");
+        this._Adherent = adherent;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        txtNom.setText("Votre Nom : "+ _Adherent.getNom());
+        txtPrenom.setText("Votre Prenom : "+ _Adherent.getPrenom());
+        txtEmail.setText("Votre Telephone : "+ _Adherent.getTelephone());
+        txtTelephone.setText("Votre Email : "+ _Adherent.getEmail());
+        txtSolde.setText(_Adherent.getSolde()+" €");
+
     }
 }

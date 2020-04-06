@@ -49,20 +49,21 @@ public class HomeActivity extends AppCompatActivity {
     Context context;
     Adherent adherent;
 
-
+    TextView txtError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         context = this;
-
-
 
         adherent = Session.getAdherent();
         //Toast.makeText(context, adherent.getNom(), Toast.LENGTH_SHORT).show();
         if(adherent == null){
+
             this.finish();
+
         }else{
             try{
                 initToolbar();
@@ -161,7 +162,9 @@ public class HomeActivity extends AppCompatActivity {
                 Functions.replaceFragment(fragmentManager, fragments.get(1),"sortieFragment");
                 break;
             case R.id.item_compte:
-                Functions.replaceFragment(fragmentManager, fragments.get(0),"sortieFragment");
+                homeFragment = (HomeFragment)fragments.get(0);
+                homeFragment.SetAdherent(adherent);
+                Functions.replaceFragment(fragmentManager, homeFragment,"sortieFragment");
                 break;
         }
         return true;
@@ -221,10 +224,12 @@ public class HomeActivity extends AppCompatActivity {
                 try{
                     Gson gson = new Gson();
                     sorties = gson.fromJson(s, Sorties.class);
-
+                    sortiesFragment.loadSorties(sorties,context);
                 }
                 catch(Exception ex){
-                    Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    txtError = findViewById(R.id.txtError);
+                    txtError.setText(ex.getMessage());
+                    Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
             //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
