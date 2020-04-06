@@ -1,5 +1,6 @@
 package com.example.association.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import android.app.Fragment;
@@ -7,6 +8,15 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.association.Entities.Sortie;
+import com.example.association.Entities.Sorties;
 
 import com.example.association.R;
 
@@ -20,6 +30,8 @@ public class SortiesFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    RecyclerView rcwSorties;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,6 +72,68 @@ public class SortiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sorties, container, false);
+        View view = inflater.inflate(R.layout.fragment_sorties, container, false);
+        rcwSorties = view.findViewById(R.id.rcvRecycler);
+
+        return view;
+    }
+
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<SortieHolder> {
+
+        Sorties sorties;
+
+        public RecyclerViewAdapter(Sorties sorties) {
+            this.sorties = sorties;
+        }
+        @NonNull
+        @Override
+        public SortieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sortie, parent, false);
+            return new SortieHolder(view);
+        }
+        @Override
+        public void onBindViewHolder(@NonNull SortieHolder sortieHolder, int position) {
+            Sortie sortie = this.sorties.get(position);
+            sortieHolder.setSortie(sortie);
+        }
+        @Override
+        public int getItemCount() {
+            return sorties.size();
+        }
+    }
+
+    public class SortieHolder extends RecyclerView.ViewHolder {
+
+        public final TextView txtNom;
+        public final TextView txtPrix;
+        public final TextView txtDate;
+        public final ImageView imgPhoto;
+
+        public SortieHolder(@NonNull View itemView) {
+            super(itemView);
+
+            txtNom = itemView.findViewById(R.id.txtNomAssociation);
+            txtPrix = itemView.findViewById(R.id.txtPrix);
+            txtDate = itemView.findViewById(R.id.txtDate);
+            imgPhoto = itemView.findViewById(R.id.imgPhoto);
+        }
+
+        public void setSortie(Sortie sortie) {
+            txtNom.setText(sortie.getNom());
+            txtPrix.setText("" + sortie.getPrix() + " €");
+            txtDate.setText("");
+            //imgPhoto.setImageDrawable();
+        }
+    }
+
+    public void loadSorties(Sorties sorties, Context context) {
+
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(sorties);
+
+        // la manière dont les adherents doivent s'afficher
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+
+        rcwSorties.setLayoutManager(layoutManager);
+        rcwSorties.setAdapter(recyclerViewAdapter);
     }
 }
