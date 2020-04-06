@@ -60,7 +60,6 @@ public class HomeActivity extends AppCompatActivity {
                 String message = ex.getMessage();
             }
         }
-
     }
 
     public class AssociationHolder extends RecyclerView.ViewHolder{
@@ -132,6 +131,13 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.item_Quitter:
                 finish();
                 break;
+            case R.id.itm_Sortie:
+                Functions.replaceFragment(fragmentManager, fragments.get(1),"sortieFragment");
+                break;
+            case R.id.item_compte:
+                Functions.replaceFragment(fragmentManager, fragments.get(0),"sortieFragment");
+                break;
+
         }
         return true;
     }
