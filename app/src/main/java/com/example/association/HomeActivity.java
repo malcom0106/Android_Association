@@ -3,12 +3,13 @@ package com.example.association;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.app.Fragment;
 import android.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,53 +22,55 @@ import android.widget.Toast;
 import com.example.association.Entities.Adherent;
 import com.example.association.Entities.Association;
 import com.example.association.Entities.Associations;
-import com.example.association.Fragment.MainFragment;
+import com.example.association.Fragments.HomeFragment;
+import com.example.association.Fragments.SortiesFragment;
 import com.example.association.Utilities.Functions;
 import com.example.association.Utilities.Session;
 
+import java.util.ArrayList;
+
 public class HomeActivity extends AppCompatActivity {
+
     FragmentManager fragmentManager;
+    HomeFragment homeFragment;
+    SortiesFragment sortiesFragment;
+    ArrayList<Fragment> fragments;
     Context context;
     Adherent adherent;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         context = this;
-        fragmentManager = getFragmentManager();
+
+
 
         adherent = Session.getAdherent();
-        Toast.makeText(context, adherent.getNom(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, adherent.getNom(), Toast.LENGTH_SHORT).show();
         if(adherent == null){
             this.finish();
         }else{
             try{
-                //On va chercher notre toolbar dans layout
-                Toolbar toolbar = findViewById(R.id.tlb_main);
-                //On remplace l'actionBar par notre toolbar
-                setSupportActionBar(toolbar);
-                //Supprimer le titre par default
-                getSupportActionBar().setDisplayShowTitleEnabled(false);
-                //Definission de titre
-                toolbar.setTitle("Bjr "+adherent.getNom());
-                //Evenement Click sur la toolbar
-                toolbar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context, "toolbar", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                initToolbar();
+                initFragments();
 
                 //Instenciation mon premier fragment
-                MainFragment mainFragment = new MainFragment();
-                Functions.replaceFragment(fragmentManager,mainFragment,"mainFragment");
+                Functions.replaceFragment(fragmentManager, homeFragment,"homeFragment");
 
             }
             catch (Exception ex){
                 String message = ex.getMessage();
             }
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        homeFragment.SetAdherent(adherent);
     }
 
     public class AssociationHolder extends RecyclerView.ViewHolder{
@@ -139,7 +142,42 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.item_Quitter:
                 finish();
                 break;
+            case R.id.itm_Sortie:
+                Functions.replaceFragment(fragmentManager, fragments.get(1),"sortieFragment");
+                break;
+            case R.id.item_compte:
+                Functions.replaceFragment(fragmentManager, fragments.get(0),"sortieFragment");
+                break;
+
         }
         return true;
+    }
+
+    public void initFragments(){
+
+        fragments = new ArrayList<>();
+
+        fragments.add(homeFragment);
+        fragments.add(sortiesFragment);
+
+        fragmentManager = getFragmentManager();
+    }
+
+    public void initToolbar(){
+        //On va chercher notre toolbar dans layout
+        Toolbar toolbar = findViewById(R.id.tlb_main);
+        //On remplace l'actionBar par notre toolbar
+        setSupportActionBar(toolbar);
+        //Supprimer le titre par default
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //Definission de titre
+        toolbar.setTitle("Bjr "+ adherent.getNom());
+        //Evenement Click sur la toolbar
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "toolbar", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

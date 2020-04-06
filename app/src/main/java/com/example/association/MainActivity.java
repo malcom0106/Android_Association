@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     EditText txtPassword;
     Adherent adherent;
     Context context;
+    String idsession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         txtLogin = findViewById(R.id.txtLogin);
         txtPassword = findViewById(R.id.txtPassword);
         Button btnLogin = findViewById(R.id.btnLogin);
+        idsession = Session.getId();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class AsyncCallWS extends AsyncTask<String, Integer,String> {
+
         private String url;
         private ParametresOkHttp parametresOkHttp;
 
@@ -97,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                         }else{
                             //Associer l'adherent à une session
                             Session.setAdherent(adherent);
-                            String idsession = Session.getId();
+                            Session.setId(idsession);
+
                             //Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
                             //Redirect vers HomeActivity
                             Intent intent = new Intent(context,HomeActivity.class);
