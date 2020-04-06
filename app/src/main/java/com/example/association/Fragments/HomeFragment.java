@@ -1,4 +1,4 @@
-package com.example.association.Fragment;
+package com.example.association.Fragments;
 
 import android.os.Bundle;
 
@@ -16,11 +16,11 @@ import com.example.association.Utilities.Session;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment {
+public class HomeFragment extends Fragment {
     public TextView textView;
     private Adherent _Adherent;
 
-    public MainFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
