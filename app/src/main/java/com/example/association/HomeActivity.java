@@ -89,59 +89,6 @@ public class HomeActivity extends AppCompatActivity {
         homeFragment.SetAdherent(adherent);
     }
 
-    public class AssociationHolder extends RecyclerView.ViewHolder{
-        public final TextView txtNom;
-        public final TextView txtAdresse;
-        public final TextView txtCP;
-        public final TextView txtVille;
-        public final TextView txtCotisation;
-        public final TextView txtTelephone;
-
-        public AssociationHolder(@NonNull View itemView) {
-            super(itemView);
-            txtNom = itemView.findViewById(R.id.txtNomAssociation);
-            txtAdresse = itemView.findViewById(R.id.txtAdresseAssociation);
-            txtCP = itemView.findViewById(R.id.txtCPAssociation);
-            txtVille = itemView.findViewById(R.id.txtVilleAssociation);
-            txtCotisation = itemView.findViewById(R.id.txtCotisationAssociation);
-            txtTelephone = itemView.findViewById(R.id.txtTelephoneAssociation);
-        }
-         public void setAssociation(Association association){
-            txtNom.setText(association.getNom());
-            txtAdresse.setText(association.getAdresse());
-            txtCP.setText(association.getCodePostal());
-            txtVille.setText(association.getVille());
-            txtCotisation.setText(association.getCotisation());
-            txtTelephone.setText(association.getTelephone());
-         }
-    }
-
-    public class AssociationAdapter extends RecyclerView.Adapter<AssociationHolder>{
-
-        Associations mesAssociations;
-
-        public AssociationAdapter(Associations associations) {
-            mesAssociations = associations;
-        }
-
-        @NonNull
-        @Override
-        public AssociationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.itemlayout, parent, false);
-            return new AssociationHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull AssociationHolder holder, int position) {
-            Association association = this.mesAssociations.get(position);
-            holder.setAssociation(association);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mesAssociations.size();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

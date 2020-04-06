@@ -31,7 +31,6 @@ public class SortiesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    Context _context;
     RecyclerView rcwSorties;
 
     // TODO: Rename and change types of parameters
@@ -74,7 +73,6 @@ public class SortiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sorties, container, false);
-
         rcwSorties = view.findViewById(R.id.rcvRecycler);
 
         return view;
@@ -114,7 +112,7 @@ public class SortiesFragment extends Fragment {
         public SortieHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtNom = itemView.findViewById(R.id.txtNom);
+            txtNom = itemView.findViewById(R.id.txtNomAssociation);
             txtPrix = itemView.findViewById(R.id.txtPrix);
             txtDate = itemView.findViewById(R.id.txtDate);
             imgPhoto = itemView.findViewById(R.id.imgPhoto);
@@ -129,17 +127,11 @@ public class SortiesFragment extends Fragment {
     }
 
     public void loadSorties(Sorties sorties, Context context) {
-        _context = context;
+
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(sorties);
 
         // la manière dont les adherents doivent s'afficher
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
-
-        // version GridView
-        //RecyclerView.LayoutManager layoutManager2 = new GridLayoutManager(context, 3);
-
-        // Effet sur le RecyclerView
-        //rcvAdherents.setItemAnimator(new DefaultItemAnimator());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
         rcwSorties.setLayoutManager(layoutManager);
         rcwSorties.setAdapter(recyclerViewAdapter);

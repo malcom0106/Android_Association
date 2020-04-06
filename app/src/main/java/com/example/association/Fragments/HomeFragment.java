@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.association.Entities.Adherent;
 import com.example.association.R;
-import com.example.association.Utilities.Session;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +35,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        txtNom = view.findViewById(R.id.txtNom);
+        txtNom = view.findViewById(R.id.txtNomAssociation);
         txtPrenom = view.findViewById(R.id.txtPrenom);
         txtEmail = view.findViewById(R.id.txtEmail);
         txtTelephone = view.findViewById(R.id.txtTelephone);
