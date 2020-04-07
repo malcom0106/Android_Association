@@ -111,11 +111,12 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.itm_Sortie:
                 index = 1;
-                Functions.replaceFragment(fragmentManager, fragments.get(1),"sortieFragment");
-                AsyncCallWS asyncCallWS = new AsyncCallWS();
+                Functions.replaceFragment(fragmentManager, fragments.get(index),"sortieFragment");
+                AsyncCallWS asyncCallWS = new AsyncCallWS(adherent.getIdAssociation());
+                asyncCallWS.execute();
                 break;
             case R.id.item_compte:
-                homeFragment = (HomeFragment)fragments.get(0);
+                homeFragment = (HomeFragment)fragments.get(index);
                 homeFragment.SetAdherent(adherent);
                 Functions.replaceFragment(fragmentManager, homeFragment,"sortieFragment");
                 break;
@@ -123,8 +124,9 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-    public void updateAdherent(String email, String password, String Telephone){
-
+    public void updateAdherent(String email, String password, String telephone){
+        AsyncCallWS asyncCallWS = new AsyncCallWS(email, password, telephone);
+        asyncCallWS.execute();
     }
 
     private void initFragments(){
@@ -250,7 +252,6 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String retourServiceWeb) {
             super.onPostExecute(retourServiceWeb);
-
             //Retour du service web
             if(!retourServiceWeb.isEmpty())
             {

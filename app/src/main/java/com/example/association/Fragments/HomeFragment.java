@@ -15,6 +15,7 @@ import android.widget.ViewSwitcher;
 
 import com.example.association.Entities.Adherent;
 import com.example.association.R;
+import com.example.association.Utilities.Session;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,8 +78,17 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 String email = edtEmail.getText().toString().trim();
                 String password = edtPassword.getText().toString().trim();
-                String email2 = edtEmail.getText().toString().trim();
+                String telephone = edtTelephone.getText().toString().trim();
 
+                //maj adherent
+                _Adherent.setEmail(email);
+                _Adherent.setTelephone(telephone);
+                Session.setAdherent(_Adherent);
+
+                //Mise a jour des champs
+                setData();
+
+                //Switch sur la premiere vue.
                 viewSwitcher.showPrevious();
             }
         });
@@ -94,7 +104,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        setData();
+    }
 
+    public void setData(){
         txtNom.setText("Votre Nom : "+ _Adherent.getNom());
         txtPrenom.setText("Votre Prenom : "+ _Adherent.getPrenom());
         txtEmail.setText("Votre Telephone : "+ _Adherent.getTelephone());
@@ -103,6 +116,5 @@ public class HomeFragment extends Fragment {
 
         edtEmail.setText(_Adherent.getEmail());
         edtTelephone.setText(_Adherent.getTelephone());
-
     }
 }
