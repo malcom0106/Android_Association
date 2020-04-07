@@ -74,17 +74,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
         protected String doInBackground(String... strings) {
             return CallServiceWeb.CallServiceWeb(this.url, this.parametresOkHttp);
         }
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(!s.isEmpty()){
+            if(!s.isEmpty() || !s.equals("\"\"")){
                 try{
                     Gson gson = new Gson();
 
@@ -115,7 +111,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch(Exception ex){
                     Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Identifiants Incorrects", Toast.LENGTH_LONG).show();
                 }
+            } 
+            else {
+                Toast.makeText(context, "Identifiants Incorrects", Toast.LENGTH_LONG).show();
             }
             //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
         }

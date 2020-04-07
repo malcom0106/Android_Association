@@ -117,7 +117,11 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-    public void initFragments(){
+    public void updateAdherent(String email, String password, String Telephone){
+
+    }
+
+    private void initFragments(){
 
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
@@ -128,7 +132,7 @@ public class HomeActivity extends AppCompatActivity {
         fragmentManager = getFragmentManager();
     }
 
-    public void initToolbar(){
+    private void initToolbar(){
         //On va chercher notre toolbar dans layout
         Toolbar toolbar = findViewById(R.id.tlb_main);
         //On remplace l'actionBar par notre toolbar
@@ -150,10 +154,19 @@ public class HomeActivity extends AppCompatActivity {
 
         private String url;
         private ParametresOkHttp parametresOkHttp;
+        String _email;
+        String _password;
+        String _Telephone;
 
         public AsyncCallWS(String url,@Nullable ParametresOkHttp parametresOkHttp) {
             this.url = url;
             this.parametresOkHttp = parametresOkHttp;
+        }
+
+        public AsyncCallWS(String email, String password, String telephone) {
+            this._email = email;
+            this._password = password;
+            this._Telephone = telephone;
         }
 
         @Override
@@ -162,6 +175,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         @Override
         protected String doInBackground(String... strings) {
+
             return CallServiceWeb.CallServiceWeb(this.url, this.parametresOkHttp);
         }
         @Override

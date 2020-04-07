@@ -7,8 +7,11 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.example.association.Entities.Adherent;
 import com.example.association.R;
@@ -24,6 +27,11 @@ public class HomeFragment extends Fragment {
     TextView txtTelephone;
     TextView txtSolde;
     Switch swhCompte;
+
+    EditText edtEmail;
+    EditText edtPassword;
+    EditText edtTelephone;
+
 
 
     public HomeFragment() {
@@ -41,6 +49,41 @@ public class HomeFragment extends Fragment {
         txtTelephone = view.findViewById(R.id.txtTelephone);
         txtSolde = view.findViewById(R.id.txtSoldeCompte);
         swhCompte = view.findViewById(R.id.swh_EtatCompte);
+
+        edtEmail = view.findViewById(R.id.edtEmail);
+        edtPassword = view.findViewById(R.id.edtPassword);
+        edtTelephone =view.findViewById(R.id.edtTelephone);
+
+
+        final ViewSwitcher viewSwitcher = view.findViewById(R.id.viewSwitcher);
+        Button btnValider = view.findViewById(R.id.btnValiderModif);
+        Button btnAnnuler = view.findViewById(R.id.btnAnnulerModif);
+        Button btnModifier = view.findViewById(R.id.btnModifierCompte);
+
+        btnModifier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSwitcher.showNext();
+            }
+        });
+        btnAnnuler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSwitcher.showPrevious();
+            }
+        });
+        btnValider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = edtEmail.getText().toString().trim();
+                String password = edtPassword.getText().toString().trim();
+                String email2 = edtEmail.getText().toString().trim();
+
+                viewSwitcher.showPrevious();
+            }
+        });
+
+
         return view;
     }
 
@@ -57,6 +100,9 @@ public class HomeFragment extends Fragment {
         txtEmail.setText("Votre Telephone : "+ _Adherent.getTelephone());
         txtTelephone.setText("Votre Email : "+ _Adherent.getEmail());
         txtSolde.setText(_Adherent.getSolde()+" €");
+
+        edtEmail.setText(_Adherent.getEmail());
+        edtTelephone.setText(_Adherent.getTelephone());
 
     }
 }
