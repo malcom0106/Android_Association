@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,15 +39,22 @@ import com.example.association.Utilities.Session;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity {
 
+    Context context;
+
     FragmentManager fragmentManager;
+
     HomeFragment homeFragment;
     SortiesFragment sortiesFragment;
     ArrayList<Fragment> fragments;
+    int index;
+
+
     Sorties sorties;
-    Context context;
+
     Adherent adherent;
 
     TextView txtError;
@@ -69,12 +77,8 @@ public class HomeActivity extends AppCompatActivity {
                 initToolbar();
                 initFragments();
 
-                ParametresOkHttp parametresOkHttp = new ParametresOkHttp();
-                parametresOkHttp.add(new ParametreOkHttp("idassociation" , ""+adherent.getIdAssociation()));
-                AsyncCallWS asyncCallWS = new AsyncCallWS(Constantes.URL_GETSORTIES,parametresOkHttp);
-                asyncCallWS.execute();
-
                 //Instenciation mon premier fragment
+                index = 0;
                 Functions.replaceFragment(fragmentManager, homeFragment,"homeFragment");
             }
             catch (Exception ex){
@@ -106,7 +110,9 @@ public class HomeActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.itm_Sortie:
+                index = 1;
                 Functions.replaceFragment(fragmentManager, fragments.get(1),"sortieFragment");
+                AsyncCallWS asyncCallWS = new AsyncCallWS();
                 break;
             case R.id.item_compte:
                 homeFragment = (HomeFragment)fragments.get(0);
@@ -150,7 +156,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private class AsyncCallWS extends AsyncTask<String, Integer,String> {
+    private class AsyncCallWS2 extends AsyncTask<String, Integer,String> {
 
         private String url;
         private ParametresOkHttp parametresOkHttp;
@@ -158,12 +164,12 @@ public class HomeActivity extends AppCompatActivity {
         String _password;
         String _Telephone;
 
-        public AsyncCallWS(String url,@Nullable ParametresOkHttp parametresOkHttp) {
+        public AsyncCallWS2(String url,@Nullable ParametresOkHttp parametresOkHttp) {
             this.url = url;
             this.parametresOkHttp = parametresOkHttp;
         }
 
-        public AsyncCallWS(String email, String password, String telephone) {
+        public AsyncCallWS2(String email, String password, String telephone) {
             this._email = email;
             this._password = password;
             this._Telephone = telephone;
@@ -194,6 +200,77 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
             //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class AsyncCallWS extends AsyncTask<String, Integer, String>
+    {
+        //Variables globales
+        int _idAssociation = 0;
+        String _email;
+        String _password;
+        String _telephone;
+        String _methode;
+
+        //Constructeur
+        public AsyncCallWS(int idAssociation) {
+            //on passe nos 2 valeurs aux variables globales
+            this._idAssociation = idAssociation;
+        }
+
+        public AsyncCallWS(String email,String password,String telephone) {
+            //on passe nos 2 valeurs aux variables globales
+            this._email = email;
+            this._password = password;
+            this._telephone= telephone;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            //on passe nos variables globales au service web
+            HashMap<String,String> parameters = new HashMap<>();
+            if(this._idAssociation > 0){
+                _methode = "getSorties";
+                parameters.put("idAssociation","" +this._idAssociation);
+
+            }else{
+                _methode = "updateAdherent";
+                parameters.put("email",this._email);
+                parameters.put("password",this._password);
+                parameters.put("telephone",this._telephone);
+            }
+            return Functions.callServiceWeb(parameters,_methode);
+        }
+
+        @Override
+        protected void onPostExecute(String retourServiceWeb) {
+            super.onPostExecute(retourServiceWeb);
+
+            //Retour du service web
+            if(!retourServiceWeb.isEmpty())
+            {
+                try {
+                    Gson gson = new Gson();
+
+                    if(_methode == "getSorties"){
+                        //Matching du flux json qui vient du service web en objet Sorties
+                        Sorties sorties = gson.fromJson(retourServiceWeb,Sorties.class);
+                        sortiesFragment.loadSorties(sorties,context);
+                    } else if(_methode == "updateAdherent"){
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    String erreur = ex.getMessage();
+                    Log.e("erreurFragment",erreur);
+                }
+            }
         }
     }
 }
