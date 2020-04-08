@@ -3,11 +3,14 @@ package com.example.association;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = this;
         Intent intent = getIntent();
-        Session.setId(intent.getStringExtra("idsession"));
+        Session.setId(intent.getStringExtra("sessionid"));
         txtLogin = findViewById(R.id.txtLogin);
         txtPassword = findViewById(R.id.txtPassword);
         Button btnLogin = findViewById(R.id.btnLogin);
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 ParametresOkHttp parametresOkHttp = new ParametresOkHttp();
                 parametresOkHttp.add(new ParametreOkHttp("login" , txtLogin.getText().toString().trim()));
                 parametresOkHttp.add(new ParametreOkHttp("password" , txtPassword.getText().toString().trim()));
+                parametresOkHttp.add(new ParametreOkHttp("idsession" , idsession));
+
 
                 //On fait une tache asynchrone
                 AsyncCallWS asyncCallWS = new AsyncCallWS(Constantes.URL_GETLOGIN,parametresOkHttp);
@@ -118,6 +123,41 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context, "Identifiants Incorrects", Toast.LENGTH_LONG).show();
             }
             //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        }
+
+
+        private void openCustomAlertDialog(Context _context){
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(_context);
+
+            alertDialogBuilder.setTitle("Créditer compte");
+
+            LayoutInflater li = LayoutInflater.from(_context);
+            View view = li.inflate(R.layout.custom, null);
+
+            final EditText txtMontant = view.findViewById(R.id.txtMontant);
+
+            alertDialogBuilder.setView(view);
+
+            alertDialogBuilder.setPositiveButton("Oui",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            String montant = txtMontant.getText().toString().trim();
+                            adherent.setSolde(adherent.getSolde() + Double.parseDouble(montant));
+                            Session.setAdherent(adherent);
+                        }
+                    });
+
+            alertDialogBuilder.setNegativeButton("Fermer", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
     }
 }

@@ -66,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
 
             Toast.makeText(SplashActivity.this, result, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            intent.putExtra("sessionId", result);
+            intent.putExtra("sessionid", result);
             startActivity(intent);
             finish();
 

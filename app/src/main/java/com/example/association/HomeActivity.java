@@ -44,6 +44,7 @@ import java.util.HashMap;
 public class HomeActivity extends AppCompatActivity {
 
     Context context;
+    Adherent _adherent;
 
     FragmentManager fragmentManager;
 
@@ -65,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         context = this;
+        _adherent = Session.getAdherent();
 
         adherent = Session.getAdherent();
         //Toast.makeText(context, adherent.getNom(), Toast.LENGTH_SHORT).show();
@@ -242,9 +244,13 @@ public class HomeActivity extends AppCompatActivity {
 
             }else{
                 _methode = "updateAdherent";
+
+                parameters.put("idAdherent",""+_adherent.getIdAdherent());
                 parameters.put("email",this._email);
                 parameters.put("password",this._password);
                 parameters.put("telephone",this._telephone);
+                parameters.put("idsession" , Session.getId());
+
             }
             return Functions.callServiceWeb(parameters,_methode);
         }

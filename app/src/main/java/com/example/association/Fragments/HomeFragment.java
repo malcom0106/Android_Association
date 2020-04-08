@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.example.association.Entities.Adherent;
+import com.example.association.HomeActivity;
 import com.example.association.R;
 import com.example.association.Utilities.Session;
 
@@ -33,7 +34,11 @@ public class HomeFragment extends Fragment {
     EditText edtPassword;
     EditText edtTelephone;
 
-
+    Button btnValider;
+    Button btnAnnuler;
+    Button btnModifier;
+    Button btnCrediter;
+    ViewSwitcher viewSwitcher;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -44,22 +49,10 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        txtNom = view.findViewById(R.id.txtNomAssociation);
-        txtPrenom = view.findViewById(R.id.txtPrenom);
-        txtEmail = view.findViewById(R.id.txtEmail);
-        txtTelephone = view.findViewById(R.id.txtTelephone);
-        txtSolde = view.findViewById(R.id.txtSoldeCompte);
-        swhCompte = view.findViewById(R.id.swh_EtatCompte);
+        _Adherent = Session.getAdherent();
 
-        edtEmail = view.findViewById(R.id.edtEmail);
-        edtPassword = view.findViewById(R.id.edtPassword);
-        edtTelephone =view.findViewById(R.id.edtTelephone);
-
-
-        final ViewSwitcher viewSwitcher = view.findViewById(R.id.viewSwitcher);
-        Button btnValider = view.findViewById(R.id.btnValiderModif);
-        Button btnAnnuler = view.findViewById(R.id.btnAnnulerModif);
-        Button btnModifier = view.findViewById(R.id.btnModifierCompte);
+        //Initiation des Widget
+        initWidget(view);
 
         btnModifier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,13 +76,25 @@ public class HomeFragment extends Fragment {
                 //maj adherent
                 _Adherent.setEmail(email);
                 _Adherent.setTelephone(telephone);
+
+                //maj de la ssesion
                 Session.setAdherent(_Adherent);
 
                 //Mise a jour des champs
                 setData();
 
+                //Enregistrement dans la BDD
+                ((HomeActivity)getActivity()).updateAdherent(email,password,telephone);
+
                 //Switch sur la premiere vue.
                 viewSwitcher.showPrevious();
+            }
+        });
+
+        btnCrediter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -107,7 +112,7 @@ public class HomeFragment extends Fragment {
         setData();
     }
 
-    public void setData(){
+    private void setData(){
         txtNom.setText("Votre Nom : "+ _Adherent.getNom());
         txtPrenom.setText("Votre Prenom : "+ _Adherent.getPrenom());
         txtEmail.setText("Votre Telephone : "+ _Adherent.getTelephone());
@@ -116,5 +121,25 @@ public class HomeFragment extends Fragment {
 
         edtEmail.setText(_Adherent.getEmail());
         edtTelephone.setText(_Adherent.getTelephone());
+    }
+
+    private void initWidget(View view){
+        txtNom = view.findViewById(R.id.txtNomAssociation);
+        txtPrenom = view.findViewById(R.id.txtPrenom);
+        txtEmail = view.findViewById(R.id.txtEmail);
+        txtTelephone = view.findViewById(R.id.txtTelephone);
+        txtSolde = view.findViewById(R.id.txtSoldeCompte);
+        swhCompte = view.findViewById(R.id.swh_EtatCompte);
+
+        edtEmail = view.findViewById(R.id.edtEmail);
+        edtPassword = view.findViewById(R.id.edtPassword);
+        edtTelephone =view.findViewById(R.id.edtTelephone);
+
+
+        viewSwitcher = view.findViewById(R.id.viewSwitcher);
+        btnValider = view.findViewById(R.id.btnValiderModif);
+        btnAnnuler = view.findViewById(R.id.btnAnnulerModif);
+        btnModifier = view.findViewById(R.id.btnModifierCompte);
+        btnCrediter = view.findViewById(R.id.btnCrediterCompte);
     }
 }

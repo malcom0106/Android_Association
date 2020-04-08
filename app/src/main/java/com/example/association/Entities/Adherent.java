@@ -3,6 +3,7 @@ package com.example.association.Entities;
 import androidx.annotation.Nullable;
 
 public class Adherent {
+    private int idAdherent;
     private String nom;
     private String prenom;
     @Nullable
@@ -22,7 +23,8 @@ public class Adherent {
     public Adherent() {
     }
 
-    public Adherent(String nom, String prenom, String matricule, String email, String telephone, double solde, boolean statut, int idassociation) {
+    public Adherent(int idAdherent, String nom, String prenom, @Nullable String matricule, @Nullable String email, @Nullable String telephone, double solde, boolean statut, int idAssociation) {
+        this.idAdherent = idAdherent;
         this.nom = nom;
         this.prenom = prenom;
         this.matricule = matricule;
@@ -30,7 +32,15 @@ public class Adherent {
         this.telephone = telephone;
         this.solde = solde;
         this.statut = statut;
-        this.idAssociation = idassociation;
+        this.idAssociation = idAssociation;
+    }
+
+    public int getIdAdherent() {
+        return idAdherent;
+    }
+
+    public void setIdAdherent(int idAdherent) {
+        this.idAdherent = idAdherent;
     }
 
     public String getNom() {
