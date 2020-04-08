@@ -13,8 +13,10 @@ import android.widget.Toast;
 import com.example.association.Entities.ParametreOkHttp;
 import com.example.association.Utilities.CallServiceWeb;
 import com.example.association.Utilities.Constantes;
+import com.example.association.Utilities.Functions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SplashActivity extends AppCompatActivity {
     Context context;
@@ -50,7 +52,8 @@ public class SplashActivity extends AppCompatActivity {
             //Simule un appel service web
             try {
                 //Thread.sleep(5000);
-                message = CallServiceWeb.CallServiceWeb(_Url, _Parametres);
+
+                message = Functions.callServiceWeb(null, "getid");
             } catch (Exception e) {
                 message = e.getMessage();
             }
@@ -63,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
 
             Toast.makeText(SplashActivity.this, result, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            intent.putExtra("sessionId", result);
+            intent.putExtra("sessionid", result);
             startActivity(intent);
             finish();
 

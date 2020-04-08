@@ -14,6 +14,7 @@ import com.example.association.MainActivity;
 import com.example.association.SplashActivity;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -33,6 +34,7 @@ public class CallServiceWeb {
         HttpUrl.Builder httpBuider = HttpUrl.parse(url).newBuilder();
         if(parameters != null){
             if(parameters.size()>0){
+
                 ParametreOkHttp parametreOkHttp = null;
                 for(int i = 0 ;  i < parameters.size(); i++){
                     parametreOkHttp = parameters.get(i);

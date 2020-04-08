@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +32,7 @@ public class SortiesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    Context _context;
     RecyclerView rcwSorties;
 
     // TODO: Rename and change types of parameters
@@ -73,29 +75,38 @@ public class SortiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sorties, container, false);
+
         rcwSorties = view.findViewById(R.id.rcvRecycler);
 
         return view;
     }
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<SortieHolder> {
-
+        //Liste d'adhérents
         Sorties sorties;
 
         public RecyclerViewAdapter(Sorties sorties) {
+            //Initialisation de la liste d'adhérents via le constructeur
             this.sorties = sorties;
         }
+
         @NonNull
         @Override
         public SortieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sortie, parent, false);
+            //Récupération du fichier xml "graphique" dans les layouts
+            View view = LayoutInflater.from(_context).inflate(R.layout.item_sortie,parent,false);
+            //Passage de notre objet(view) à notre viewholder
             return new SortieHolder(view);
         }
+
         @Override
-        public void onBindViewHolder(@NonNull SortieHolder sortieHolder, int position) {
+        public void onBindViewHolder(@NonNull SortieHolder sortieholder, int position) {
+            //Récupération d'un adhérent parmi la liste des adhérents en fonction de sa position
             Sortie sortie = this.sorties.get(position);
-            sortieHolder.setSortie(sortie);
+            //Passage de l'objet adhérent à notre viewholder
+            sortieholder.setSortie(sortie);
         }
+
         @Override
         public int getItemCount() {
             return sorties.size();
@@ -119,21 +130,31 @@ public class SortiesFragment extends Fragment {
         }
 
         public void setSortie(Sortie sortie) {
+            //Matching des données avec les widgets
             txtNom.setText(sortie.getNom());
-            txtPrix.setText("" + sortie.getPrix() + " €");
+            txtPrix.setText("" + sortie.getPrix() + "€");
             txtDate.setText("");
             //imgPhoto.setImageDrawable();
         }
     }
 
-    public void loadSorties(Sorties sorties, Context context) {
-
+    public void loadSorties(Sorties sorties, Context context){
+        _context = context;
+        //Instanciation de l'adapter
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(sorties);
 
-        // la manière dont les adherents doivent s'afficher
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        //Manière d'afficher les adhérents (verticalement, horizontalement, gridview)
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
+
+        //Version Gridview
+        //RecyclerView.LayoutManager layoutManagerGrid = new GridLayoutManager(context, 3);
 
         rcwSorties.setLayoutManager(layoutManager);
+
+        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
+        rcwSorties.setItemAnimator(defaultItemAnimator);
+
+        //Passage de notre adapter à notre recyclerview
         rcwSorties.setAdapter(recyclerViewAdapter);
     }
 }
